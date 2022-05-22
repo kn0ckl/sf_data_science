@@ -1,48 +1,58 @@
-"""Игра угадай число 
-Компьютер сам загададывает и сам угадывает"""
+"""Игра угадай число
+Компьютер сам загадывает и сам угадывает число
+"""
 
 import numpy as np
 
-def random_predict(number:int=1) -> int:
-    """Predict number
+
+def random_predict(number: int = 1) -> int:
+    """Рандомно угадываем число
 
     Args:
-        number (int, optional): _predict number_. Defaults to 1.
+        number (int, optional): Загаданное число. Defaults to 1.
 
     Returns:
-        int: _number of attemps_
+        int: Число попыток
     """
     count = 0
+    a = 1
+    b = 101
+    predict_number = np.random.randint(a, b)
 
-    while True:
-        count+=1 
-        predict_number = np.random.randint(1, 101)
-        if number == predict_number:
-            break
+    while number != predict_number:
+        count += 1
+        if number > predict_number:
+            a = predict_number
+            predict_number = np.random.randint(a, b)
 
+        elif number < predict_number:
+            b = predict_number
+            predict_number = np.random.randint(a, b)
+            
     return(count)
 
 
 def score_game(random_predict) -> int:
-    """For what count of attemps to guess the number 
+    """За какое количство попыток в среднем за 1000 подходов угадывает наш алгоритм
 
     Args:
-        random_predict (_type_): Guess func
+        random_predict ([type]): функция угадывания
 
     Returns:
-        average count of attemps
+        int: среднее количество попыток
     """
     count_ls = []
-    np.random.seed(1)
-    random_array = np.random.randint(1, 101, size=(1000))
+    np.random.seed(1)  # фиксируем сид для воспроизводимости
+    random_array = np.random.randint(1, 101, size=(1000))  # загадали список чисел
 
     for number in random_array:
-       count_ls.append(random_predict(number))
+        count_ls.append(random_predict(number))
+
     score = int(np.mean(count_ls))
+    print(f"Ваш алгоритм угадывает число в среднем за:{score} попыток")
+    return score
 
-    print(f'Ваш алгоритм угадывает число в среднем за: {score} попыток')
-    return(score)
 
-# RUN
-if __name__ == '__main__':
+if __name__ == "__main__":
+    # RUN
     score_game(random_predict)
